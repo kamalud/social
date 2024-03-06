@@ -1,5 +1,10 @@
 <?php
 
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\Api\FollowersController;
+use App\Http\Controllers\Api\LikeController;
+use App\Http\Controllers\Api\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +19,32 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::controller(AuthController::class)->group(function () {
+    Route::prefix('auth')->group(function () {
+        Route::post('/register', 'register');
+        Route::post('/login', 'login');
+        Route::post('/request-password-request', 'PasswordRequesst');
+        Route::post('/reset-password', 'resetPassword');
+
+        Route::middleware(['auth:sanctum'])->group(function () {
+            Route::middleware(['ability:user,admin'])->group(function () {
+                Route::get('/profile', 'profile');
+                Route::post('/change-password', 'changePassword');
+                Route::post('/update-profile', 'updateProfile');
+                Route::get('/logout', 'logout');
+            });
+        });
+    });
+});
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::middleware(['ability:user'])->group(function () {
+        Route::prefix('user')->group(function () {
+            Route::apiResources([
+                'posts'=> PostController::class,
+                'comments'=> CommentController::class,
+                'like-unlike'=> LikeController::class,
+                'follow-unfollow'=> FollowersController::class,
+            ]);
+        });
+    });
 });

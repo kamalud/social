@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->enum('media_type',['image','video'])->default('image');
             $table->string('media_thumbnail')->nullable();
-            $table->string('media_link');
+            $table->string('media_link')->nullable();
             $table->enum('visiblity',['public','followers'])->default('public');
             $table->text('body')->nullable();
             $table->timestamps();
