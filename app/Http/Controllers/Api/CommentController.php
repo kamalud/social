@@ -59,13 +59,10 @@ class CommentController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'post_id'=>'required',
             'content'=>'required|string|max:255'
         ]);
 
         $comment = Comment::find($id);
-        $comment->post_id = $request->post_id;
-        $comment->user_id = $request->user()->id;
         $comment->content = $request->content;
         
         if($comment->save()){
