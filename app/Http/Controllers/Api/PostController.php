@@ -17,8 +17,14 @@ class PostController extends Controller
     {
         $limit = 10;
         if(isset($request->limit)) $limit = $request->limit;
-
-        $post  = Post::all()->orderBy('id','DESC')->paginate($limit);
+        $user = $request->user();
+        $post  = Post::with('user','user.followers')
+                        ->withCount('likes','comments')
+                        ->whereHas('user.followers', function($q) use ($user){
+                        $q->where('follwing_id', $user->id);
+                        })
+                        ->orWhere('visiblity','public')
+                        ->paginate($limit);
 
         return response()->json([$post]);
     }
