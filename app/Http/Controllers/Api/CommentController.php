@@ -58,13 +58,12 @@ class CommentController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $request->validate([
-            'content'=>'required|string|max:255'
-        ]);
+
 
         $comment = Comment::find($id);
         $comment->content = $request->content;
-        
+        $comment->update();
+        return $comment;
         if($comment->save()){
             return response()->json([
                 'message'=>'comment update successfuly',

@@ -27,7 +27,7 @@ class FollowersController extends Controller
         $user  = $request->user();
         $follower = Follower::where('user_id',$request->user_id)->where('follwing_id',$user->id)->first();
 
-        if($follower){
+        if(!$follower){
             $follower = new Follower();
             $follower->user_id = $request->user_id;
             $follower->follwing_id = $user->id;
