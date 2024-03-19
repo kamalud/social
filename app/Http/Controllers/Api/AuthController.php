@@ -58,6 +58,7 @@ class AuthController extends Controller
         }
         $user = $request->user();
         $user->tokens()->delete();
+        
 
         if ($user->role == 'admin') {
             $token = $request->user()->createToken('Personal Access Token', ['admin']);
@@ -195,7 +196,7 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        if ($request->user()->tokens()->delete) {
+        if($request->user()->tokens()->delete()) {
             return response()->json(['message' => 'Logout successfuly'], 200);
         } else {
             return response()->json(['message' => 'Some errors'], 500);
